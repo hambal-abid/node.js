@@ -31,6 +31,10 @@ console.log('Will read file!');
 
 // ----------------------------SERVER--------------------------------
 
+//read the file only once starting the program and then return data on each api hit, so synchronus file handling is not a problem
+const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
+const dataObj = JSON.parse(data);
+
 const server = http.createServer((req,res) => {
     const pathName = req.url;
     console.log(pathName);
@@ -38,6 +42,9 @@ const server = http.createServer((req,res) => {
         res.end(`This is the OVERVIEW`);
     } else if (pathName === '/product') {
         res.end(`This is the PRODUCT`);
+    } else if (pathName === '/api') {
+        res.writeHead(200, {'content-type' : 'application/json'});
+        res.end(data);
     } else {
         res.writeHead(404, {
             'content-type':'text/html'
